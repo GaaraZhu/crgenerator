@@ -17,10 +17,10 @@ func (issue JiraIssue) String() string {
 	return fmt.Sprintf("%s,%s,%s", issue.Key, issue.Summary, issue.Link)
 }
 
-func getJiraIssues(ticketNumbers []string, baseURL, username, apiToken string) ([]string, error) {
+func getJiraIssues(ticketNumbers []string, baseURL, userName, apiToken string) ([]string, error) {
 	var issues []string
 	for _, ticketNumber := range ticketNumbers {
-		issue, err := getJiraIssue(ticketNumber, baseURL, username, apiToken)
+		issue, err := getJiraIssue(ticketNumber, baseURL, userName, apiToken)
 		if err != nil {
 			return nil, err
 		}
