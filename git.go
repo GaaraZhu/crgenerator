@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"slices"
 	"strings"
 
 	mapset "github.com/deckarep/golang-set/v2"
@@ -27,8 +28,9 @@ func extractJiraTicketNumbers(startCommit, endCommit string) ([]string, error) {
 			ticketNumbers.Add(ticketNumber)
 		}
 	}
-
-	return ticketNumbers.ToSlice(), nil
+	ticketNumbersSlice := ticketNumbers.ToSlice()
+	slices.Sort(ticketNumbersSlice)
+	return ticketNumbersSlice, nil
 }
 
 func extractJiraTicketNumber(commitMessage string) ([]string, error) {
