@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+
+	mapset "github.com/deckarep/golang-set/v2"
 )
 
 func extractJiraTicketNumbers(startCommit, endCommit string) ([]string, error) {
@@ -14,26 +16,19 @@ func extractJiraTicketNumbers(startCommit, endCommit string) ([]string, error) {
 		return nil, err
 	}
 
-	result := make(map[string]struct{})
+	ticketNumbers := mapset.NewSet[string]()
 	for _, commit := range commits {
-		var ticketNumbers, err = extractJiraTicketNumber(commit)
+		ticketNumbersInCommit, err := extractJiraTicketNumber(commit)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, ticketNumber := range ticketNumbers {
-			if _, exists := result[ticketNumber]; !exists {
-				result[ticketNumber] = struct{}{}
-			}
+		for _, ticketNumber := range ticketNumbersInCommit {
+			ticketNumbers.Add(ticketNumber)
 		}
 	}
 
-	ticketNumbers := make([]string, 0, len(result))
-	for ticketNumber := range result {
-		ticketNumbers = append(ticketNumbers, ticketNumber)
-	}
-
-	return ticketNumbers, nil
+	return ticketNumbers.ToSlice(), nil
 }
 
 func extractJiraTicketNumber(commitMessage string) ([]string, error) {
