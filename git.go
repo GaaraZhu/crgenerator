@@ -8,6 +8,34 @@ import (
 	"strings"
 )
 
+func extractJiraTicketNumbers(startCommit, endCommit string) ([]string, error) {
+	commits, err := getCommitMessages(startCommit, endCommit)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make(map[string]struct{})
+	for _, commit := range commits {
+		var ticketNumbers, err = extractJiraTicketNumber(commit)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, ticketNumber := range ticketNumbers {
+			if _, exists := result[ticketNumber]; !exists {
+				result[ticketNumber] = struct{}{}
+			}
+		}
+	}
+
+	ticketNumbers := make([]string, 0, len(result))
+	for ticketNumber := range result {
+		ticketNumbers = append(ticketNumbers, ticketNumber)
+	}
+
+	return ticketNumbers, nil
+}
+
 func extractJiraTicketNumber(commitMessage string) ([]string, error) {
 	re, err := regexp.Compile(`([A-Z]+-\d+)`)
 	if err != nil {
