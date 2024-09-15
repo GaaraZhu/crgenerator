@@ -12,7 +12,7 @@ type JiraIssueInfo struct {
 	} `json:"fields"`
 }
 
-func PullDetails(startCommit, endCommit, baseURL, userName, apiToken string) ([]string, error) {
+func pullDetails(startCommit, endCommit, baseURL, userName, apiToken string) ([]string, error) {
 	ticketNumbers, err := extractJiraTicketNumbers(startCommit, endCommit)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func main() {
 		return
 	}
 
-	changes, _ := PullDetails(os.Args[0], os.Args[1], baseUrl, userName, apiToken)
+	changes, _ := pullDetails(os.Args[0], os.Args[1], baseUrl, userName, apiToken)
 	for _, change := range changes {
 		fmt.Println(change)
 	}
