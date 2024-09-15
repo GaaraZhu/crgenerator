@@ -24,7 +24,7 @@ func TestExtractJiraTicketNumber(t *testing.T) {
 		},
 		{
 			Input:          "fix: solves NPEs ABC-345 and ABC-992",
-			ExpectedOutput: []string{"ABC-345", "ABC-9921"},
+			ExpectedOutput: []string{"ABC-345", "ABC-992"},
 		},
 	}
 
