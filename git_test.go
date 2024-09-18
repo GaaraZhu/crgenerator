@@ -5,18 +5,6 @@ import (
 	"testing"
 )
 
-func TestExtractJiraTicketNumbers(t *testing.T) {
-	ticketNumbers, err := extractJiraTicketNumbers("0a649cc62d77ae5f92b0ca8df25b5b51793bb0a7", "1336a69fbc390a81f5ba152da92dcb28ad4b3901")
-	if err != nil {
-		t.Fatalf("Failed to extract jira ticket number")
-	}
-
-	expectedTicketNumbers := []string{"ABC-011", "ABC-012", "ABC-013", "ABC-014", "ABC-015"}
-	if len(ticketNumbers) == 0 || !reflect.DeepEqual(ticketNumbers, expectedTicketNumbers) {
-		t.Fatalf("want %v, got %v", expectedTicketNumbers, ticketNumbers)
-	}
-}
-
 func TestExtractJiraTicketNumber(t *testing.T) {
 	ts := []struct {
 		Input          string

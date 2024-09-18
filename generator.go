@@ -13,15 +13,26 @@ type JiraIssueInfo struct {
 }
 
 func pullDetails(startCommit, endCommit, baseURL, userName, apiToken string) ([]string, error) {
-	ticketNumbers, err := extractJiraTicketNumbers(startCommit, endCommit)
+	fmt.Printf("getting commit messages from %s to %s\n", startCommit, endCommit)
+	commitMessages, err := getCommitMessages(startCommit, endCommit)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("commit messages: %+q\n", commitMessages)
 
+	fmt.Printf("extracting JIRA issue numbers from commit messages\n")
+	ticketNumbers, err := extractJiraTicketNumbers(commitMessages)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("issue numbers: %+q\n", ticketNumbers)
+
+	fmt.Printf("pulling JIRA issue details\n")
 	changes, err := getJiraIssues(ticketNumbers, baseURL, userName, apiToken)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("issue details: %+q\n", changes)
 
 	return changes, nil
 }

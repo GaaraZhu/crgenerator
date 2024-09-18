@@ -11,14 +11,9 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func extractJiraTicketNumbers(startCommit, endCommit string) ([]string, error) {
-	commits, err := getCommitMessages(startCommit, endCommit)
-	if err != nil {
-		return nil, err
-	}
-
+func extractJiraTicketNumbers(commitMessages []string) ([]string, error) {
 	ticketNumbers := mapset.NewSet[string]()
-	for _, commit := range commits {
+	for _, commit := range commitMessages {
 		ticketNumbersInCommit, err := extractJiraTicketNumber(commit)
 		if err != nil {
 			return nil, err
