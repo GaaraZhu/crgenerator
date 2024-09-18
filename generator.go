@@ -51,7 +51,7 @@ func main() {
 		return
 	}
 
-	changes, _ := pullDetails(os.Args[0], os.Args[1], baseUrl, userName, apiToken)
+	changes, _ := pullDetails(os.Args[1], os.Args[2], baseUrl, userName, apiToken)
 	for _, change := range changes {
 		fmt.Println(change)
 	}
