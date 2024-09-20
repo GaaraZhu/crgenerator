@@ -32,7 +32,6 @@ func pullDetails(startCommit, endCommit, baseURL, userName, apiToken string) ([]
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("issue details: %+q\n", changes)
 
 	return changes, nil
 }
@@ -47,11 +46,16 @@ func main() {
 	}
 
 	if len(os.Args) < 2 {
-		fmt.Println("Required command arguments in order: start commit hash, end commit hash")
+		fmt.Println("Required command argument: start commit or tag")
 		return
 	}
+	startCommit := os.Args[1]
+	endCommit := ""
+	if len(os.Args) > 2 {
+		endCommit = os.Args[2]
+	}
 
-	changes, _ := pullDetails(os.Args[1], os.Args[2], baseUrl, userName, apiToken)
+	changes, _ := pullDetails(startCommit, endCommit, baseUrl, userName, apiToken)
 	for _, change := range changes {
 		fmt.Println(change)
 	}

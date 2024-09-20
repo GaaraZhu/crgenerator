@@ -14,7 +14,7 @@ type JiraIssue struct {
 }
 
 func (issue JiraIssue) String() string {
-	return fmt.Sprintf("%s,%s,%s", issue.Key, issue.Summary, issue.Link)
+	return fmt.Sprintf("%s: %s %s", issue.Key, issue.Summary, issue.Link)
 }
 
 func getJiraIssues(ticketNumbers []string, baseURL, userName, apiToken string) ([]string, error) {
