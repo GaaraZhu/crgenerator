@@ -2,39 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 )
-
-type JiraIssueInfo struct {
-	Key    string `json:"key"`
-	Fields struct {
-		Summary string `json:"summary"`
-	} `json:"fields"`
-}
-
-func pullDetails(startCommit, endCommit, baseURL, userName, apiToken string) ([]string, error) {
-	fmt.Printf("getting commit messages from %s to %s\n", startCommit, endCommit)
-	commitMessages, err := getCommitMessages(startCommit, endCommit)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("commit messages: %+q\n", commitMessages)
-
-	fmt.Printf("extracting JIRA issue numbers from commit messages\n")
-	ticketNumbers, err := extractJiraTicketNumbers(commitMessages)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("issue numbers: %+q\n", ticketNumbers)
-
-	fmt.Printf("pulling JIRA issue details\n")
-	changes, err := getJiraIssues(ticketNumbers, baseURL, userName, apiToken)
-	if err != nil {
-		return nil, err
-	}
-
-	return changes, nil
-}
 
 func main() {
 	baseUrl := os.Getenv("JIRA_BASE_URL")
@@ -55,9 +25,34 @@ func main() {
 		endCommit = os.Args[2]
 	}
 
-	changes, _ := pullDetails(startCommit, endCommit, baseUrl, userName, apiToken)
-	for _, change := range changes {
-		fmt.Println(change)
+	commitMessages, err := getCommitMessages(startCommit, endCommit)
+	if err != nil {
+		log.Fatal(err)
 	}
+	printArray("commit messages", commitMessages)
 
+	ticketNumbers, err := extractJiraTicketNumbers(commitMessages)
+	if err != nil {
+		log.Fatal(err)
+	}
+	printArray("jira issues", ticketNumbers)
+
+	details, err := getJiraIssues(ticketNumbers, baseUrl, userName, apiToken)
+	if err != nil {
+		log.Fatal(err)
+	}
+	printArray("issue details", details)
+}
+
+const (
+	Green = "\033[32m"
+	Reset = "\033[0m"
+)
+
+func printArray(title string, data []string) {
+	fmt.Println(Green + title + Reset)
+	for _, str := range data {
+		fmt.Printf("%s\n", str)
+	}
+	fmt.Println("")
 }
