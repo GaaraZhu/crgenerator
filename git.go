@@ -11,12 +11,18 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func extractJiraTicketNumbers(commitMessages []string) ([]string, error) {
+func extractJiraTicketNumbers(commitMessages []string) ([]string, []string, error) {
 	ticketNumbers := mapset.NewSet[string]()
+	commitsWithoutTicketNumber := []string{}
 	for _, commit := range commitMessages {
 		ticketNumbersInCommit, err := extractJiraTicketNumber(commit)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
+		}
+
+		if ticketNumbersInCommit == nil {
+			commitsWithoutTicketNumber = append(commitsWithoutTicketNumber, commit)
+			continue
 		}
 
 		for _, ticketNumber := range ticketNumbersInCommit {
@@ -25,7 +31,7 @@ func extractJiraTicketNumbers(commitMessages []string) ([]string, error) {
 	}
 	ticketNumbersSlice := ticketNumbers.ToSlice()
 	slices.Sort(ticketNumbersSlice)
-	return ticketNumbersSlice, nil
+	return ticketNumbersSlice, commitsWithoutTicketNumber, nil
 }
 
 func extractJiraTicketNumber(commitMessage string) ([]string, error) {

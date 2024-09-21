@@ -29,28 +29,33 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	printArray("commit messages", commitMessages)
+	printArray(Green+"commit messages", commitMessages)
 
-	ticketNumbers, err := extractJiraTicketNumbers(commitMessages)
+	ticketNumbers, commitsWithoutTicketNumber, err := extractJiraTicketNumbers(commitMessages)
 	if err != nil {
 		log.Fatal(err)
 	}
-	printArray("jira issues", ticketNumbers)
+	if len(commitsWithoutTicketNumber) > 0 {
+		printArray(Red+"commits messages without ticket number", commitsWithoutTicketNumber)
+	}
+
+	printArray(Green+"jira issues", ticketNumbers)
 
 	details, err := getJiraIssues(ticketNumbers, baseUrl, userName, apiToken)
 	if err != nil {
 		log.Fatal(err)
 	}
-	printArray("issue details", details)
+	printArray(Green+"issue details", details)
 }
 
 const (
+	Red   = "\033[31m"
 	Green = "\033[32m"
 	Reset = "\033[0m"
 )
 
 func printArray(title string, data []string) {
-	fmt.Println(Green + title + Reset)
+	fmt.Println(title + Reset)
 	for _, str := range data {
 		fmt.Printf("%s\n", str)
 	}
