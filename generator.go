@@ -36,7 +36,7 @@ func main() {
 		log.Fatal(err)
 	}
 	if len(commitsWithoutTicketNumber) > 0 {
-		printArray(Red+"commits messages without ticket number", commitsWithoutTicketNumber)
+		printArray(Red+"commit messages without ticket number", commitsWithoutTicketNumber)
 	}
 
 	printArray(Green+"jira issues", ticketNumbers)
