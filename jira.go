@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type JiraIssue struct {
@@ -37,7 +38,7 @@ type JiraIssueDTO struct {
 }
 
 func getJiraIssue(ticketNumber, baseURL, username, apiToken string) (*JiraIssue, error) {
-	url := fmt.Sprintf("%s/rest/api/2/issue/%s", baseURL, ticketNumber)
+	url := fmt.Sprintf("%s/rest/api/2/issue/%s", strings.TrimSuffix(baseURL, "/"), ticketNumber)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
