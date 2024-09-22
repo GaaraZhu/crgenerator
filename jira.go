@@ -23,7 +23,8 @@ func getJiraIssues(ticketNumbers []string, baseURL, userName, apiToken string) (
 	for _, ticketNumber := range ticketNumbers {
 		issue, err := getJiraIssue(ticketNumber, baseURL, userName, apiToken)
 		if err != nil {
-			return nil, err
+			fmt.Println(err)
+			continue
 		}
 		issues = append(issues, issue.String())
 	}
