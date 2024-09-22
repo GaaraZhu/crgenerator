@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func TestExtractJiraTicketNumber(t *testing.T) {
+func TestExtractJiraIssueNumber(t *testing.T) {
 	ts := []struct {
 		Input          string
 		ExpectedOutput []string
 	}{
 		{
-			Input:          "abcesfe feat: ABC-1234: adds function to extract jira ticket from commit message",
+			Input:          "abcesfe feat: ABC-1234: adds function to extract jira issue from commit message",
 			ExpectedOutput: []string{"ABC-1234"},
 		},
 		{
@@ -33,9 +33,9 @@ func TestExtractJiraTicketNumber(t *testing.T) {
 	}
 
 	for _, test := range ts {
-		o, err := extractJiraTicketNumber(test.Input)
+		o, err := extractJiraIssueNumber(test.Input)
 		if err != nil {
-			t.Fatalf("Failed to extract jira ticket number")
+			t.Fatalf("Failed to extract jira issue number")
 		}
 
 		if !reflect.DeepEqual(o, test.ExpectedOutput) {

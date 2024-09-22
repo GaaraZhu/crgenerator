@@ -11,30 +11,30 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
-func extractJiraTicketNumbers(commitMessages []string) ([]string, []string, error) {
-	ticketNumbers := mapset.NewSet[string]()
-	commitsWithoutTicketNumber := []string{}
+func extractJiraIssueNumbers(commitMessages []string) ([]string, []string, error) {
+	issueNumbers := mapset.NewSet[string]()
+	commitsWithoutIssueNumber := []string{}
 	for _, commit := range commitMessages {
-		ticketNumbersInCommit, err := extractJiraTicketNumber(commit)
+		issueNumbersInCommit, err := extractJiraIssueNumber(commit)
 		if err != nil {
 			return nil, nil, err
 		}
 
-		if ticketNumbersInCommit == nil {
-			commitsWithoutTicketNumber = append(commitsWithoutTicketNumber, commit)
+		if issueNumbersInCommit == nil {
+			commitsWithoutIssueNumber = append(commitsWithoutIssueNumber, commit)
 			continue
 		}
 
-		for _, ticketNumber := range ticketNumbersInCommit {
-			ticketNumbers.Add(strings.ToUpper(ticketNumber))
+		for _, issueNumber := range issueNumbersInCommit {
+			issueNumbers.Add(strings.ToUpper(issueNumber))
 		}
 	}
-	ticketNumbersSlice := ticketNumbers.ToSlice()
-	slices.Sort(ticketNumbersSlice)
-	return ticketNumbersSlice, commitsWithoutTicketNumber, nil
+	issueNumbersSlice := issueNumbers.ToSlice()
+	slices.Sort(issueNumbersSlice)
+	return issueNumbersSlice, commitsWithoutIssueNumber, nil
 }
 
-func extractJiraTicketNumber(commitMessage string) ([]string, error) {
+func extractJiraIssueNumber(commitMessage string) ([]string, error) {
 	re, err := regexp.Compile(`((?i)[A-Z]+-\d+)`)
 	if err != nil {
 		return nil, err

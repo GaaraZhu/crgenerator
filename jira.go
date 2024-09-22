@@ -18,17 +18,19 @@ func (issue JiraIssue) String() string {
 	return fmt.Sprintf("%s: %s %s", issue.Key, issue.Summary, issue.Link)
 }
 
-func getJiraIssues(ticketNumbers []string, baseURL, userName, apiToken string) ([]string, error) {
+func getJiraIssues(issueNumbers []string, baseURL, userName, apiToken string) ([]string, []string, error) {
 	var issues []string
-	for _, ticketNumber := range ticketNumbers {
-		issue, err := getJiraIssue(ticketNumber, baseURL, userName, apiToken)
+	var issuesNotFound []string
+	for _, issueNumber := range issueNumbers {
+		issue, err := getJiraIssue(issueNumber, baseURL, userName, apiToken)
 		if err != nil {
 			fmt.Println(err)
+			issuesNotFound = append(issuesNotFound, issueNumber)
 			continue
 		}
 		issues = append(issues, issue.String())
 	}
-	return issues, nil
+	return issues, issuesNotFound, nil
 }
 
 type JiraIssueDTO struct {
@@ -38,8 +40,8 @@ type JiraIssueDTO struct {
 	} `json:"fields"`
 }
 
-func getJiraIssue(ticketNumber, baseURL, username, apiToken string) (*JiraIssue, error) {
-	url := fmt.Sprintf("%s/rest/api/2/issue/%s", strings.TrimSuffix(baseURL, "/"), ticketNumber)
+func getJiraIssue(issueNumber, baseURL, username, apiToken string) (*JiraIssue, error) {
+	url := fmt.Sprintf("%s/rest/api/2/issue/%s", strings.TrimSuffix(baseURL, "/"), issueNumber)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -65,9 +67,9 @@ func getJiraIssue(ticketNumber, baseURL, username, apiToken string) (*JiraIssue,
 	}
 
 	jiraIssue := JiraIssue{
-		Key:     ticketNumber,
+		Key:     issueNumber,
 		Summary: issueDto.Fields.Summary,
-		Link:    fmt.Sprintf("%s/browse/%s", baseURL, ticketNumber),
+		Link:    fmt.Sprintf("%s/browse/%s", baseURL, issueNumber),
 	}
 
 	return &jiraIssue, nil

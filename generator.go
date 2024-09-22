@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	// validate and parse inputs
 	baseUrl := os.Getenv("JIRA_BASE_URL")
 	userName := os.Getenv("JIRA_USER_NAME")
 	apiToken := os.Getenv("JIRA_API_TOKEN")
@@ -25,26 +26,32 @@ func main() {
 		endCommit = os.Args[2]
 	}
 
+	// pull commit messages
 	commitMessages, err := getCommitMessages(startCommit, endCommit)
 	if err != nil {
 		log.Fatal(err)
 	}
 	printArray(Green+"commit messages", commitMessages)
 
-	ticketNumbers, commitsWithoutTicketNumber, err := extractJiraTicketNumbers(commitMessages)
+	// extract issue numbers
+	issueNumbers, commitsWithoutIssueNumber, err := extractJiraIssueNumbers(commitMessages)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if len(commitsWithoutTicketNumber) > 0 {
-		printArray(Red+"commit messages without ticket number", commitsWithoutTicketNumber)
+	if len(commitsWithoutIssueNumber) > 0 {
+		printArray(Red+"commit messages without issue number", commitsWithoutIssueNumber)
 	}
+	printArray(Green+"jira issues", issueNumbers)
 
-	printArray(Green+"jira issues", ticketNumbers)
-
-	details, err := getJiraIssues(ticketNumbers, baseUrl, userName, apiToken)
+	// pull issue details
+	details, issuesNotFound, err := getJiraIssues(issueNumbers, baseUrl, userName, apiToken)
 	if err != nil {
 		log.Fatal(err)
 	}
+	if len(issuesNotFound) > 0 {
+		printArray(Red+"issue not found", issuesNotFound)
+	}
+
 	printArray(Green+"issue details", details)
 }
 
