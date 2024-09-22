@@ -11,20 +11,24 @@ func TestExtractJiraTicketNumber(t *testing.T) {
 		ExpectedOutput []string
 	}{
 		{
-			Input:          "feat: ABC-1234: adds function to extract jira ticket from commit message",
+			Input:          "abcesfe feat: ABC-1234: adds function to extract jira ticket from commit message",
 			ExpectedOutput: []string{"ABC-1234"},
 		},
 		{
-			Input:          "fix: 1BCD-1234: solves NPE",
+			Input:          "sdfadsf fix: 1BCD-1234: solves NPE",
 			ExpectedOutput: []string{"BCD-1234"},
 		},
 		{
-			Input:          "chore: updates sequence diagram ABC-345",
+			Input:          "asdfadf chore: updates sequence diagram ABC-345",
 			ExpectedOutput: []string{"ABC-345"},
 		},
 		{
-			Input:          "fix: solves NPEs ABC-345 and ABC-992",
+			Input:          "sdsddwq fix: solves NPEs ABC-345 and ABC-992",
 			ExpectedOutput: []string{"ABC-345", "ABC-992"},
+		},
+		{
+			Input:          "aasdfavt merge pull reqeust #12 from feature/abc-019-support-no-end-commit",
+			ExpectedOutput: []string{"abc-019"},
 		},
 	}
 

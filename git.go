@@ -26,7 +26,7 @@ func extractJiraTicketNumbers(commitMessages []string) ([]string, []string, erro
 		}
 
 		for _, ticketNumber := range ticketNumbersInCommit {
-			ticketNumbers.Add(ticketNumber)
+			ticketNumbers.Add(strings.ToUpper(ticketNumber))
 		}
 	}
 	ticketNumbersSlice := ticketNumbers.ToSlice()
@@ -35,7 +35,7 @@ func extractJiraTicketNumbers(commitMessages []string) ([]string, []string, erro
 }
 
 func extractJiraTicketNumber(commitMessage string) ([]string, error) {
-	re, err := regexp.Compile(`([A-Z]+-\d+)`)
+	re, err := regexp.Compile(`((?i)[A-Z]+-\d+)`)
 	if err != nil {
 		return nil, err
 	}
