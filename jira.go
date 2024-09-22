@@ -24,7 +24,6 @@ func getJiraIssues(issueNumbers []string, baseURL, userName, apiToken string) ([
 	for _, issueNumber := range issueNumbers {
 		issue, err := getJiraIssue(issueNumber, baseURL, userName, apiToken)
 		if err != nil {
-			fmt.Println(err)
 			issuesNotFound = append(issuesNotFound, issueNumber)
 			continue
 		}
