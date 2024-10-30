@@ -21,13 +21,11 @@ A tool to analyze git commits, extract JIRA numbers and pull issue details for C
     echo 'export JIRA_API_TOKEN=???' >> ~/.zshrc
     source ~/.zshrc
 ```
-3. run (from repository directory, and if no end commit is provided it will default to the lastest one)
+3. run - go to project directory, check JIRA issues between commits, tags, branches etc
 ```
-    crgenerator $START_COMMIT $END_COMMIT
+    crgenerator $START $END
 ```
-
-sample output (with JIRA issue number, description and URL)
-![output](https://github.com/user-attachments/assets/92ec4ca9-3757-4378-a84c-5c48943a915e)
+![issues_between_commits](https://github.com/user-attachments/assets/7914f4e2-936d-4148-9a0b-bdd38b78643b)
 
 
 
